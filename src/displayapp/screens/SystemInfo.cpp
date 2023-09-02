@@ -81,10 +81,11 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
   lv_label_set_text_fmt(label,
                         "#FFFF00 InfiniTime#\n\n"
                         "#808080 Version# %ld.%ld.%ld\n"
+                        "#FC03B6 JENSON edition#\n"
                         "#808080 Short Ref# %s\n"
                         "#808080 Build date#\n"
                         "%s\n"
-                        "%s\n\n"
+                        "%s\n"
                         "#808080 Bootloader# %s",
                         Version::Major(),
                         Version::Minor(),
