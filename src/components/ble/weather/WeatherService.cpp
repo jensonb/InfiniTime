@@ -204,6 +204,11 @@ namespace Pinetime {
             break;
           }
           case WeatherData::eventtype::Temperature: {
+            if (tmpExpires == 86400) {
+              // discard average weather
+              CleanUpQcbor(&decodeContext);
+              break;
+            }
             std::unique_ptr<WeatherData::Temperature> temperature = std::make_unique<WeatherData::Temperature>();
             temperature->timestamp = tmpTimestamp;
             temperature->eventType = static_cast<WeatherData::eventtype>(tmpEventType);
