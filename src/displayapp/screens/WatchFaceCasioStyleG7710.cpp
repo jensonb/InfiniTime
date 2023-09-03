@@ -154,7 +154,7 @@ WatchFaceCasioStyleG7710::WatchFaceCasioStyleG7710(Controllers::DateTime& dateTi
   weatherIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(weatherIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, color_text);
   lv_obj_set_style_local_text_font(weatherIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &fontawesome_weathericons);
-  lv_label_set_text(weatherIcon, Symbols::cloudSunRain);
+  lv_label_set_text(weatherIcon, Symbols::pooStorm);
   lv_obj_align(weatherIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
 
   temperature = lv_label_create(lv_scr_act(), nullptr);
@@ -347,7 +347,7 @@ void WatchFaceCasioStyleG7710::Refresh() {
     }
   } else {
     lv_label_set_text_static(temperature, "--");
-    lv_label_set_text(weatherIcon, Symbols::ban);
+    lv_label_set_text(weatherIcon, Symbols::pooStorm);
     lv_obj_realign(temperature);
     lv_obj_realign(weatherIcon);
   }
