@@ -1,5 +1,7 @@
 #pragma once
 
+// https://github.com/juliettef/IconFontCppHeaders/blob/main/IconsFontAwesome5.h
+
 namespace Pinetime {
   namespace Applications {
     namespace Screens {
@@ -46,6 +48,7 @@ namespace Pinetime {
         static constexpr const char* smog = "\xEF\x9D\x9F";
         static constexpr const char* cloud = "\xEF\x83\x82";
         static constexpr const char* ban = "\xEF\x81\x9E";
+        static constexpr const char* pooStorm = "\xEF\x9D\x9A";
 
         // lv_font_sys_48.c
         static constexpr const char* settings = "\xEE\xA2\xB8";

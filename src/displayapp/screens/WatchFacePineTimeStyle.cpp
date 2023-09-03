@@ -115,7 +115,7 @@ WatchFacePineTimeStyle::WatchFacePineTimeStyle(Controllers::DateTime& dateTimeCo
   weatherIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(weatherIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
   lv_obj_set_style_local_text_font(weatherIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &fontawesome_weathericons);
-  lv_label_set_text(weatherIcon, Symbols::cloudSunRain);
+  lv_label_set_text(weatherIcon, Symbols::pooStorm);
   lv_obj_align(weatherIcon, sidebar, LV_ALIGN_IN_TOP_MID, 0, 35);
   lv_obj_set_auto_realign(weatherIcon, true);
   if (settingsController.GetPTSWeather() == Pinetime::Controllers::Settings::PTSWeather::On) {
@@ -548,7 +548,7 @@ void WatchFacePineTimeStyle::Refresh() {
         lv_label_set_text(weatherIcon, Symbols::sun);
       } else if ((clouds >= 70) && (clouds <= 90) && (precip == 1)) {
         lv_label_set_text(weatherIcon, Symbols::cloudSunRain);
-      } else if ((clouds > 90) && (precip == 0)) {
+      } else if ((clouds > 70) && (precip == 0)) {
         lv_label_set_text(weatherIcon, Symbols::cloud);
       } else if ((clouds > 70) && (precip >= 2)) {
         lv_label_set_text(weatherIcon, Symbols::cloudShowersHeavy);
@@ -560,7 +560,7 @@ void WatchFacePineTimeStyle::Refresh() {
     }
   } else {
     lv_label_set_text_static(temperature, "--");
-    lv_label_set_text(weatherIcon, Symbols::ban);
+    lv_label_set_text(weatherIcon, Symbols::pooStorm);
     lv_obj_realign(temperature);
     lv_obj_realign(weatherIcon);
   }
