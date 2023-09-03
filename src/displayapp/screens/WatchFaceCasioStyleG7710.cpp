@@ -12,6 +12,8 @@
 #include "components/heartrate/HeartRateController.h"
 #include "components/motion/MotionController.h"
 #include "components/settings/Settings.h"
+#include "components/ble/weather/WeatherService.h"
+
 using namespace Pinetime::Applications::Screens;
 
 WatchFaceCasioStyleG7710::WatchFaceCasioStyleG7710(Controllers::DateTime& dateTimeController,
@@ -21,6 +23,7 @@ WatchFaceCasioStyleG7710::WatchFaceCasioStyleG7710(Controllers::DateTime& dateTi
                                                    Controllers::Settings& settingsController,
                                                    Controllers::HeartRateController& heartRateController,
                                                    Controllers::MotionController& motionController,
+                                                   Controllers::WeatherService& weatherService,
                                                    Controllers::FS& filesystem)
   : currentDateTime {{}},
     batteryIcon(false),
@@ -30,7 +33,8 @@ WatchFaceCasioStyleG7710::WatchFaceCasioStyleG7710(Controllers::DateTime& dateTi
     notificatioManager {notificatioManager},
     settingsController {settingsController},
     heartRateController {heartRateController},
-    motionController {motionController} {
+    motionController {motionController},
+    weatherService {weatherService} {
 
   lfs_file f = {};
   if (filesystem.FileOpen(&f, "/fonts/lv_font_dots_40.bin", LFS_O_RDONLY) >= 0) {
@@ -148,10 +152,20 @@ WatchFaceCasioStyleG7710::WatchFaceCasioStyleG7710(Controllers::DateTime& dateTi
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
+  weatherIcon = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(weatherIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, color_text);
+  lv_obj_set_style_local_text_font(weatherIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &fontawesome_weathericons);
+  lv_label_set_text(weatherIcon, Symbols::cloudSunRain);
+  lv_obj_align(weatherIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
+
+  temperature = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(temperature, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, color_text);
+  lv_obj_align(temperature, weatherIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
+
   heartbeatIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text_static(heartbeatIcon, Symbols::heartBeat);
   lv_obj_set_style_local_text_color(heartbeatIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, color_text);
-  lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
+  lv_obj_align(heartbeatIcon, temperature, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
 
   heartbeatValue = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(heartbeatValue, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, color_text);
@@ -309,6 +323,34 @@ void WatchFaceCasioStyleG7710::Refresh() {
     lv_label_set_text_fmt(stepValue, "%lu", stepCount.Get());
     lv_obj_realign(stepValue);
     lv_obj_realign(stepIcon);
+  }
+
+  if (weatherService.GetCurrentTemperature()->timestamp != 0 && weatherService.GetCurrentClouds()->timestamp != 0 &&
+      weatherService.GetCurrentPrecipitation()->timestamp != 0) {
+    nowTemp = (weatherService.GetCurrentTemperature()->temperature * 9 / 500 + 32);
+    clouds = (weatherService.GetCurrentClouds()->amount);
+    precip = (weatherService.GetCurrentPrecipitation()->amount);
+    if (nowTemp.IsUpdated()) {
+      lv_label_set_text_fmt(temperature, "%d°", nowTemp.Get());
+      if ((clouds <= 30) && (precip == 0)) {
+        lv_label_set_text(weatherIcon, Symbols::sun);
+      } else if ((clouds >= 70) && (clouds <= 90) && (precip == 1)) {
+        lv_label_set_text(weatherIcon, Symbols::cloudSunRain);
+      } else if ((clouds > 90) && (precip == 0)) {
+        lv_label_set_text(weatherIcon, Symbols::cloud);
+      } else if ((clouds > 70) && (precip >= 2)) {
+        lv_label_set_text(weatherIcon, Symbols::cloudShowersHeavy);
+      } else {
+        lv_label_set_text(weatherIcon, Symbols::cloudSun);
+      };
+      lv_obj_realign(temperature);
+      lv_obj_realign(weatherIcon);
+    }
+  } else {
+    lv_label_set_text_static(temperature, "--");
+    lv_label_set_text(weatherIcon, Symbols::ban);
+    lv_obj_realign(temperature);
+    lv_obj_realign(weatherIcon);
   }
 }
 
