@@ -1,5 +1,4 @@
 #include "displayapp/screens/WatchFaceCasioStyleG7710.h"
-
 #include <lvgl/lvgl.h>
 #include <cstdio>
 #include "displayapp/screens/BatteryIcon.h"
@@ -7,12 +6,12 @@
 #include "displayapp/screens/NotificationIcon.h"
 #include "displayapp/screens/Symbols.h"
 #include "components/battery/BatteryController.h"
+#include "components/ble/weather/WeatherService.h"
 #include "components/ble/BleController.h"
 #include "components/ble/NotificationManager.h"
 #include "components/heartrate/HeartRateController.h"
 #include "components/motion/MotionController.h"
 #include "components/settings/Settings.h"
-#include "components/ble/weather/WeatherService.h"
 
 using namespace Pinetime::Applications::Screens;
 

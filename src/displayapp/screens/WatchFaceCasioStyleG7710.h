@@ -7,6 +7,7 @@
 #include <memory>
 #include "displayapp/screens/Screen.h"
 #include "components/datetime/DateTimeController.h"
+#include "components/ble/weather/WeatherService.h"
 #include "components/ble/BleController.h"
 #include "utility/DirtyValue.h"
 
@@ -32,6 +33,7 @@ namespace Pinetime {
                                  Controllers::Settings& settingsController,
                                  Controllers::HeartRateController& heartRateController,
                                  Controllers::MotionController& motionController,
+                                 Controllers::WeatherService& weather,
                                  Controllers::FS& filesystem);
         ~WatchFaceCasioStyleG7710() override;
 
@@ -51,6 +53,9 @@ namespace Pinetime {
         Utility::DirtyValue<bool> notificationState {};
         using days = std::chrono::duration<int32_t, std::ratio<86400>>; // TODO: days is standard in c++20
         Utility::DirtyValue<std::chrono::time_point<std::chrono::system_clock, days>> currentDate;
+        Utility::DirtyValue<int16_t> nowTemp {};
+        int16_t clouds = 0;
+        int16_t precip = 0;
 
         lv_point_t line_icons_points[3] {{0, 5}, {117, 5}, {122, 0}};
         lv_point_t line_day_of_week_number_points[4] {{0, 0}, {100, 0}, {95, 95}, {0, 95}};
@@ -77,6 +82,8 @@ namespace Pinetime {
         lv_obj_t* bleIcon;
         lv_obj_t* batteryPlug;
         lv_obj_t* label_battery_value;
+        lv_obj_t* weatherIcon;
+        lv_obj_t* temperature;
         lv_obj_t* heartbeatIcon;
         lv_obj_t* heartbeatValue;
         lv_obj_t* stepIcon;
@@ -93,6 +100,7 @@ namespace Pinetime {
         Controllers::Settings& settingsController;
         Controllers::HeartRateController& heartRateController;
         Controllers::MotionController& motionController;
+        Controllers::WeatherService& weatherService;
 
         lv_task_t* taskRefresh;
         lv_font_t* font_dot40 = nullptr;
