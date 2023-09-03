@@ -548,7 +548,7 @@ void WatchFacePineTimeStyle::Refresh() {
         lv_label_set_text(weatherIcon, Symbols::sun);
       } else if ((clouds >= 70) && (clouds <= 90) && (precip == 1)) {
         lv_label_set_text(weatherIcon, Symbols::cloudSunRain);
-      } else if ((clouds > 90) && (precip == 0)) {
+      } else if ((clouds > 70) && (precip == 0)) {
         lv_label_set_text(weatherIcon, Symbols::cloud);
       } else if ((clouds > 70) && (precip >= 2)) {
         lv_label_set_text(weatherIcon, Symbols::cloudShowersHeavy);
